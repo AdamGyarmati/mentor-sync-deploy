@@ -1,0 +1,38 @@
+name: CI Pipeline
+
+on:
+  push:
+  # Melyik branchre pusholással induljon el a folyamat
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+# Itt tudjuk definiálni azokat a lépéseket amiket a workflow-nak végre kell hajtania
+    steps:
+    - uses: actions/checkout@v3
+    # Első lépés, beloginolunk DockerHub-ra
+    - name: Login Dockerhub
+    # Itt környezeti változókat tudunk használni, nem beégetett adatokat
+      env: 
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        # Ez a konkrét parancs ami le fog futni
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+# Backend image buildelése és pusholása
+    - name: Build the Backend Docker image
+    # Fontos, hogy az image-név a dockerhub felhasználónévvel kezdődjön
+      run: docker build -t gyarmatiadam/cicd-pipeline-backend-test-together security-demo-with-angular/
+    - name: Backend image push to Dockerhub
+      run: docker push gyarmatiadam/cicd-pipeline-backend-test-together:latest
+
+# Frontend image buildelése és pusholása
+    - name: Build the Frontend Docker image
+    # Fontos, hogy az image-név a dockerhub felhasználónévvel kezdődjön
+      run: docker build -t gyarmatiadam/cicd-pipeline-frontend-test-together angular-security-jwt/
+    - name: Frontend image push to Dockerhub
+      run: docker push gyarmatiadam/cicd-pipeline-frontend-test-together:latest
