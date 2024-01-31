@@ -29,12 +29,8 @@ public class SpringWebSecurity implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://ec2-3-70-135-81.eu-central-1.compute.amazonaws.com",
-                        "http://localhost:4200",
-                        "http://adamgyarmati.com",
-                        "adamgyarmati.com",
-                        "https://adamgyarmati.com",
-                        "https://www.adamgyarmati.com")
+                .allowedOrigins("http://ec2-3-120-248-75.eu-central-1.compute.amazonaws.com",
+                        "http://localhost:4200")
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
                 .allowedHeaders("*");
     }
